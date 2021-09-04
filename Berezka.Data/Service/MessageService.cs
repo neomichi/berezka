@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Berezka.Data.Model;
+using Berezka.Data.ViewModel;
 
 namespace Berezka.Data.Service
 {
@@ -37,12 +38,33 @@ namespace Berezka.Data.Service
             return _db.Messages.AsNoTracking().Count(x => x.To == AccountId);
         }
 
-        public void AddMessage(Message message)
+        public int AddMessage(MessageView messageView)
         {
-            _db.Messages.Add(message);
-            _db.SaveChanges();
+         
+            _db.Messages.Add(ConvertFrom(messageView));
+            return _db.SaveChanges();
         }
 
+        public int DeleteMessage(MessageView messageView)
+        {
+          
+            _db.Messages.Remove(ConvertFrom(messageView));
+            return  _db.SaveChanges();           
+        }
 
+        private Message ConvertFrom(MessageView messageView)
+        {
+            return new Message
+            {
+                Id = messageView.Id,
+                From = messageView.From,
+                To = messageView.To,
+                Text=messageView.Text,
+                messageStatus= messageView.messageStatus,
+                messageType = messageView.messageType,
+            };
+        }
+
+       
     }
 }
