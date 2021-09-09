@@ -13,19 +13,17 @@ namespace Berezka.Data.Service
         public AesHelper(IConfiguration configuration)
         {
             _configuration = configuration;
+  
         }
 
-        public AesHelper()
-        {
-        }
 
         public string EncryptData(Guid UserId, string fullstringdate, string securityKey)
         {
             var result = "";
-            var sf = string.Format("{0},{1},{2}", UserId, fullstringdate, securityKey);
+            var secret = $"{UserId},{fullstringdate},{securityKey}";
             try
             {               
-                result = EncryptString(securityKey, sf);
+                result = EncryptString(securityKey, secret);
                 
             } catch 
             {
@@ -89,7 +87,8 @@ namespace Berezka.Data.Service
 
         public (Guid UserId, DateTime fulldatetime, string securityKey) DecryptData(string cipherText)
         {
-            var result = DecryptString(_configuration.GetSection("Jwt")["SecurityKey"], cipherText);
+            var securityKey = _configuration.GetSection("Jwt")["SecurityKey"];
+            var result = DecryptString(securityKey, cipherText);
             var array = result.Split(',');
             return (array[0].ToGuid(), array[1].ParceFullToDateTime(), array[2]);
         }

@@ -12,10 +12,6 @@ namespace Berezka.Data
 {
     public static class RSATool
     {
-
-
-
-
         public static string Encrypt(string text, string publicKey)
         {
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(1024);
