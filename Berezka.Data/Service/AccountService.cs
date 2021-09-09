@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Berezka.Data.Model;
 using Berezka.Data.ViewModel;
 using Berezka.Data.EnumType;
-using Berezka.Data.Interfaces;
+
 
 namespace Berezka.Data.Service
 {
@@ -42,20 +42,17 @@ namespace Berezka.Data.Service
 
         public async ValueTask<bool> EmailFree(string email)
         {
-            return (!string.IsNullOrWhiteSpace(email)
-                && email.IndexOf("@") > 0
-                && email.Length > 3)
-
-             ? await Accounts().AnyAsync(x => EF.Functions.Like(x.Email, email))
-             : false;
+            return !string.IsNullOrWhiteSpace(email)
+                   && email.Length > 3
+                   && email.IndexOf("@") > 0
+                   && !await Accounts().AnyAsync(x => x.Email.ToLower() == email.ToLower());
         }
 
         public async ValueTask<bool> UrlFree(string url)
         {
             return (!string.IsNullOrWhiteSpace(url)
-               && Regex.IsMatch(url, "^[A-Za-zА-Яа-я0-9_-]{3,10}$"))
-             ? await Accounts().AnyAsync(x => EF.Functions.Like(x.Url, url))
-             : false;
+                    && Regex.IsMatch(url, "^[A-Za-zА-Яа-я0-9_-]{3,10}$"))
+                    && !await Accounts().AnyAsync(x => x.Url.ToLower() == url.ToLower());
         }
 
 
@@ -95,7 +92,7 @@ namespace Berezka.Data.Service
 
         public List<AccountView> GetAllAccount()
         {
-            return Accounts().Select(x => AccountToAccountView(x)).ToList();
+            return Accounts().ToArray().Select(x => AccountToAccountView(x)).ToList();
         }
 
         public AccountView CreateOrEditAccount(AccountView accountView)
@@ -133,12 +130,10 @@ namespace Berezka.Data.Service
 
         }
 
-        private Account AccountViewToAccount(AccountView accountView)
+        public Account AccountViewToAccount(AccountView accountView)
         {
-             
 
-
-             var account = new Account()
+            var account = new Account()
             {
                 Id = accountView.Id,
                 Fio = accountView.Fio,
@@ -153,11 +148,9 @@ namespace Berezka.Data.Service
             return account;
         }
 
-        private AccountView AccountToAccountView(Account account)
+        public AccountView AccountToAccountView(Account account)
         {
-
-
-            int[] roles = Array.Empty<int>();
+            var roles = new int[] { };
 
 
             if (account.AccountRoles != null)

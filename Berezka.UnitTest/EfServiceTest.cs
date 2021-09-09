@@ -1,76 +1,65 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using Berezka.Data;
 using Berezka.Data.EnumType;
 using Berezka.Data.Service;
 using Berezka.WebApp.Service;
-using Castle.Core.Configuration;
+
 using EntityFrameworkCoreMock;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NUnit.Framework;
 using RestSharp;
+using Assert = NUnit.Framework.Assert;
+
 
 namespace Berezka.UnitTest
 {
-    [TestClass]
+  
     public class EfTest
     {
-        IConfiguration _configuration;
 
-        public EfTest (IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
-        [TestMethod]
-      
-        public  void EfServiceTest()
+        [Test]
+        public void EfServiceTest()
         {
 
- 
-
-          
-
-
-            var a = _configuration;
-            var b = a;
-
-
-
-            var connectionString = "Host=localhost;Port=5432;User ID=postgres;Password=123;Database=Test6;Pooling=true;";
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+            var connectionString = config.GetSection("ConnectionStrings")["PostgreSQL"];
 
             var builder = new DbContextOptionsBuilder<MyDbContext>();
             builder.UseNpgsql(connectionString);
 
-            using (var context = new MyDbContext(builder.Options))
-            {
-
-
-
-                //var b = context.Accounts.Count();
-                //var z = b;
-                IConfiguration _configuration;
+            var context = new MyDbContext(builder.Options);
+            
                 IAccountService accountService = new AccountService(context);
-                ICryptoHelper cryptoHelper = new RsaHelper();
-               // ITokenService tokenService = new TokenService(accountService, _configuration, cryptoHelper)
 
-                //ITokenService tokenService = new TokenService(accountService,);
+                Assert.IsTrue(accountService.EmailFree("asd@asd.ru").Result);
+                Assert.IsTrue(accountService.UrlFree("asdas").Result);
+                Assert.False(accountService.EmailFree("admin@test.ru").Result);
+                Assert.False(accountService.UrlFree("manager").Result);
 
-                //accountService.GetAccount().
-                // var gg = ass.GetAccount();
-
-
-
-
-
-            }
-
-
-
-
+                var account = accountService.GetAllAccount().First();
+                Assert.AreEqual(account.Id,accountService.GetAccount(account.Id).Id);
+                
+               
         }
+
+       
+
+
+
+
+
+
+
+
+
+        
     }
 }
