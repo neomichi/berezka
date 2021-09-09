@@ -21,41 +21,24 @@ namespace Berezka.WebApp.Controllers
     public class ValuesController : ControllerBase
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(ValuesController));
-        private readonly MyDbContext _db;
-
-
-      
-        public ValuesController(MyDbContext db)
-        {
-            _db = db;
-        }
+                    
+    
 
         [SwaggerOperation(
           Summary = "Run Test",
-         Description = "Allow any",    
-    Tags = new[] { "TestApi" }
-        )]
-
-      
+          Description = "Allow any",    
+          Tags = new[] { "TestApi" }
+        )]      
 
 
         [HttpGet]
         public IActionResult Get()
-        {
-            
+        {        
 
-          var name = "not auth";
-
-            if (User.Identity.IsAuthenticated)
-            {
-                name = User.Identity.Name;
-                var claims = User.GetClaims();
-            }
-          
-            log.Error("rabotaet");
-            log.Error("работает");
+           
+            log.Info("работает");
             
-            return Ok(name);
+            return Ok("is work?");
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using Berezka.Data.Model;
 using Berezka.Data.Service;
+using Berezka.Data.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +23,6 @@ namespace Berezka.WebApp.Controllers
         public ActionResult GetMessages(Guid AccountId)
         {
            return Ok(_messageSevice.GetFromGuid(AccountId));
-
         }
         [HttpGet("GetCountMessages")]
         public ActionResult GetCountMessages(Guid AccountId)
@@ -31,7 +31,7 @@ namespace Berezka.WebApp.Controllers
             return Ok(_messageSevice.GetCountMessages(AccountId));
         }
         [HttpPost]
-        public ActionResult Post(Message message)
+        public ActionResult Post(MessageView message)
         {
             _messageSevice.AddMessage(message);
 
@@ -39,13 +39,11 @@ namespace Berezka.WebApp.Controllers
                 
         }
         [HttpDelete]
-        public ActionResult Delete(Message message)
+        public ActionResult Delete(MessageView message)
         {
-            ///_messageSevice.;
-            ///
-            
+           var result= _messageSevice.DeleteMessage(message);
 
-            return Ok("");
+            return Ok(result);
 
         }
     }

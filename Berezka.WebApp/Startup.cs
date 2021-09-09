@@ -157,12 +157,12 @@ namespace Berezka.WebApp
             services.AddControllers()
                 .AddJsonOptions(options =>
                 {
-                    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = null;  
                 });
   
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "MyTestService", Version = "v1", });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1", });
                 
             });     
             services.AddResponseCaching();
@@ -179,10 +179,9 @@ namespace Berezka.WebApp
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseSwaggerUI(o =>
-            {
+            app.UseSwaggerUI(o =>{
             });
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"));

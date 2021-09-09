@@ -86,7 +86,7 @@ namespace Berezka.Data
 
         public static int ToInt(this string value)
         {
-            int result = 0;
+            var result = 0;
             var pattern = @"\d+";
             if (!string.IsNullOrWhiteSpace(value))
             {
@@ -95,16 +95,10 @@ namespace Berezka.Data
             }
             return result;
         }
-
-        // public static object DateTimeFullParce(string v)
-        // {
-        //
-        //     return new Onject();
-        // }
-
+        
         public static Guid ToGuid(this string val)
         {
-            Guid result;
+            var result = Guid.Empty;
             Guid.TryParse(val, out result);
             return result;
         }
@@ -131,8 +125,7 @@ namespace Berezka.Data
         public static string ObjIsString(this Object val)
         {
             var result = "";
-            if (val is string) result = (string)val;
-
+            if (val is string s) result = s;
             return result;
         }
 
@@ -141,7 +134,6 @@ namespace Berezka.Data
         public static Dictionary<int,string> EnumToDic<T>() where T : System.Enum
         {
             
-
             var result = new Dictionary<int, string>();
             var values = Enum.GetValues(typeof(T));
             foreach (int item in values)
@@ -152,13 +144,7 @@ namespace Berezka.Data
             //    .ToDictionary(x => (int)x, x => x.ToString());
         }
 
-        public static ValueTask<int> AddAsync(int a, int b)
-        {
-            return new ValueTask<int>(a + b);
-        }
-
-
-
+      
 
     }
 }
