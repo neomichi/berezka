@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using Berezka.Data.Interfaces;
+
 using Berezka.Data.Model;
 
 namespace Berezka.Data.ViewModel
 {
-    public record AccountView : IAccountView
+    public record AccountView 
     {
         public Guid Id { get; init; }
         [Required]
