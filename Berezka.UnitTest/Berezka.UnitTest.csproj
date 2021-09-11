@@ -25,8 +25,4 @@
     <ProjectReference Include="..\Berezka.WebApp\Berezka.WebApp.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Service\" />
-  </ItemGroup>
-
 </Project>

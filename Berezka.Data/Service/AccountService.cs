@@ -78,15 +78,8 @@ namespace Berezka.Data.Service
                x.Email.ToLower() == accountLoginView.Email.ToLower() &&
                EF.Equals(x.Password, passwordHash)
             );
-
-            if (account == null)
-            {
-                return null;
-            }
-            else
-            {
-                return AccountToAccountView(account);
-            }
+            
+            return account != null ? AccountToAccountView(account) : null;
         }
 
 
@@ -130,7 +123,7 @@ namespace Berezka.Data.Service
 
         }
 
-        public Account AccountViewToAccount(AccountView accountView)
+        private Account AccountViewToAccount(AccountView accountView)
         {
 
             var account = new Account()
@@ -148,35 +141,8 @@ namespace Berezka.Data.Service
             return account;
         }
 
-        public AccountView AccountToAccountView(Account account)
+        private AccountView AccountToAccountView(Account account)
         {
-            var roles = new int[] { };
-
-
-            if (account.AccountRoles != null)
-            {
-
-                var rolesEnumDic = Enum.GetValues(typeof(Roles)).Cast<Roles>()
-                    .Select(x => ((int)x, x.ToString())).ToList();
-
-                roles = account.AccountRoles.Select(x =>
-                rolesEnumDic.FirstOrDefault(y => y.Item2.EQ(x.Role.Title)).Item1)
-                    .ToArray();
-
-
-
-                //new   { A =
-                //rolesEnumDic.FirstOrDefault(y => y.Item2.EQ(x.Role.Title)).Item1
-                //}
-                //).ToList();
-
-                //var bb = rolesDb;
-                //for (int i = 0; i < rolesDb.Count; i++)
-                //{
-                //    roles[i] = (rolesEnumDic.SingleOrDefault(x => x.Item2.EQ(rolesDb[i].Title)).Item1);
-                //}
-            }
-
             var accountView = new AccountView()
             {
                 Id = account.Id,
@@ -184,7 +150,7 @@ namespace Berezka.Data.Service
                 Avatar = account.Avatar,
                 Url = account.Url,
                 Email = account.Email,
-                Roles = roles[0] //костыль потом поменяю
+                Roles = account.GetListRoles(),
             };
             return accountView;
 

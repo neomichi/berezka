@@ -8,7 +8,7 @@ namespace Berezka.Data.Service
     {
         void AddQuestionAnswers(FaqView faqView);
         IEnumerable<KeyValuePair<string, Guid>> GetAllCategories();
-        List<FaqData> GetFaqTest();
-        string GetAnswer(Guid id);
+        List<FaqData> GetAllFaq();
+        string GetAnswer(Guid faqQuestionAnswersId);
     }
 }

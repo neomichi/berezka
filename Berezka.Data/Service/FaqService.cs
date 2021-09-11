@@ -16,12 +16,12 @@ namespace Berezka.Data.Service
             _db = db;
         }
    
-        public List<FaqData> GetFaqTest()
+        public List<FaqData> GetAllFaq()
         {
             //
-            var faqQA = GetFaqQuestionAnswers().Include(x => x.FaqCategory).ToArray();
+            var allFaq= GetFaqQuestionAnswers().Include(x => x.FaqCategory).ToArray();
 
-            var qq = (from item in faqQA
+            var faqData = (from item in allFaq
                       group item by new { item.FaqCategoryId, item.FaqCategory.Category } into g
                       select new FaqData
                       {
@@ -37,7 +37,7 @@ namespace Berezka.Data.Service
                           }).ToList()
                       }).ToList();
 
-            return qq;
+            return faqData;
         }
 
 
@@ -85,9 +85,9 @@ namespace Berezka.Data.Service
         }
 
 
-        public string GetAnswer(Guid id)
+        public string GetAnswer(Guid faqQuestionAnswersId)
         {
-            var result = GetFaqQuestionAnswers().FirstOrDefault(x => x.Id == id);
+            var result = GetFaqQuestionAnswers().FirstOrDefault(x => x.Id == faqQuestionAnswersId);
             if (result==null) return "";
             return result.Answer;
         }

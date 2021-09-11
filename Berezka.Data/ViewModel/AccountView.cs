@@ -21,7 +21,7 @@ namespace Berezka.Data.ViewModel
 
         public string Fio { get; init; }
 
-        public int Roles { get; init; }
+        public string[] Roles { get; init; }
 
         public string Password { get; init; }
 

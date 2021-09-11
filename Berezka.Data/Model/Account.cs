@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -25,9 +26,20 @@ namespace Berezka.Data.Model
 
         public ICollection<AccountRole> AccountRoles { get; set; }
 
-        
 
-         
+        public string[] GetListRoles()
+        {
+            var ar = new List<string>();
+            if (AccountRoles!=null && AccountRoles.Any())
+            {
+                var roles=  this.AccountRoles.Select(x => x.Role.Title).ToArray();
+                ar.AddRange(roles);
+                
+            }
+            return ar.ToArray();
+        }
+
+
     }
 
     

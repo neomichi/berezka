@@ -19,7 +19,7 @@ namespace Berezka.WebApp.Controllers
         [ResponseCache(Duration = 30)]
         public IActionResult GetAll()
         {
-            return Ok(_faqService.GetFaqTest());
+            return Ok(_faqService.GetAllFaq());
         }
         [ResponseCache(Duration = 30)]
 

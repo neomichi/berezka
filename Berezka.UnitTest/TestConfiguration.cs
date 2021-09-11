@@ -1,28 +1,39 @@
-﻿using System.Configuration;
-using Berezka.Data.Service;
+﻿using Berezka.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+
 
 namespace Berezka.UnitTest
 {
     [TestClass]
     public class TestConfiguration
     {
-      
-        #region Property  
-        public Mock<IConfiguration> mock = new Mock<IConfiguration>();
-        #endregion
-       
+        
         [TestMethod]
-        public void TestTConfiguration()
+        public void ConfigurationTest()
         {
-
-            var mockConfSection = new Mock<IConfigurationSection>();
-            mockConfSection.SetupGet(m => m[It.Is<string>(s => s == "default")]).Returns("mock value");
-            
-
-           // Assert.AreEqual(a, b);
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+            var connectionString = config.GetSection("ConnectionStrings")["PostgreSQL"];
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(connectionString));
         }
+
+        public void EfTest()
+        {
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+            var connectionString = config.GetSection("ConnectionStrings")["PostgreSQL"];
+
+            var builder = new DbContextOptionsBuilder<MyDbContext>();
+            builder.UseNpgsql(connectionString);
+        
+            Assert.IsNotNull(new MyDbContext(builder.Options));
+       
+        }
+        
+        
     }
 }
