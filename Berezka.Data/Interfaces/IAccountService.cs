@@ -14,5 +14,6 @@ namespace Berezka.Data.Service
         AccountView GetAccount(Guid accountId);
         List<AccountView> GetAllAccount();
         ValueTask<bool> UrlFree(string url);
+        int RemoveAccount<T>(T obj);
     }
 }

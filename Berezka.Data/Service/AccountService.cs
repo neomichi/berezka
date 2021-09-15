@@ -91,7 +91,7 @@ namespace Berezka.Data.Service
         public AccountView CreateOrEditAccount(AccountView accountView)
         {
 
-            Account account = AccountViewToAccount(accountView);
+            var account = AccountViewToAccount(accountView);
 
 
             if (accountView.Id == Guid.Empty)  _db.Add(account);
@@ -119,7 +119,7 @@ namespace Berezka.Data.Service
                 _db.AccountRoles.Add(new AccountRole() { Account = account, Role = userRole });
             }
             int change = _db.SaveChanges();
-            return change == 1 ? AccountToAccountView(account) : null;
+            return change>0 ? AccountToAccountView(account) : null;
 
         }
 
@@ -155,6 +155,49 @@ namespace Berezka.Data.Service
             return accountView;
 
         }
+
+        
+
+        public int RemoveAccount<T>(T obj) 
+        {
+            var result = 0;
+           
+           
+            var str = obj.ObjIsString();
+
+        
+            switch (typeof(T).Name)
+            {
+                case nameof(String):
+                    {
+                        var account= _db.Accounts.First(x => str.ToLower()==x.Email.ToLower());
+                        return Remove(account);
+                    
+                    }
+               case nameof(Guid):
+                    {
+                        var account=_db.Accounts.First(x => x.Id == Guid.Parse(obj.ToString()));
+                        return Remove(account);
+                    }
+                case nameof(Account): {
+                        var a = obj.GetType();
+                        var b = a;
+                        return 0;
+                    }
+            };
+
+            return result;
+            
+        }
+
+
+        private int Remove (Account account)
+        {            
+            _db.Accounts.Remove(account);
+            return _db.SaveChanges();
+        }
+
+
 
         //private ValueTask<List<int>> UserRole()
         //{
